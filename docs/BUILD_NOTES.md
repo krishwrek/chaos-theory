@@ -32,6 +32,13 @@ Last updated: 2026-10-19
 - Verified invite URL query composition preserves existing `ptoken` and other query parameters while adding the room code.
 - This is API/session-level verification, not a physical two-device browser test. The temporary preview link is view-only and tokenized; a recipient must be able to access that preview URL. Full real-device invite acceptance and realtime UI behavior still need manual confirmation.
 
+## Start button fix (2026-10-22)
+- Root cause: the Start Chaos button was disabled whenever any player was not ready, so clicking it gave no explanation and made the control appear broken.
+- UI now disables Start only while fewer than four players are present or a start request is in flight. At four or more players, the server remains authoritative about readiness and the UI displays the returned explanation as a toast.
+- Added an in-flight guard, progress label, success notification, connection-failure feedback, and a dynamic lobby hint explaining the remaining player/readiness requirement.
+- Published the fix to https://chaostheory.floot.app and synced the exact `pages/_index.tsx` source to GitHub.
+- Validation after change: TypeScript clean; one default spec file passed, zero failed (two hook specs remain excluded by the runner default).
+
 ## Known gaps
 - This is an early playable vertical slice, not a balanced production release.
 - Challenges currently share a generic majority/tie resolution rule. Role and round-objective bonuses exist, but challenge-specific correctness and balance still need work.
