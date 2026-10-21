@@ -110,8 +110,20 @@ export default function HomePage() {
     } catch { notify("Couldn't reach the game server. Try again."); }
   }
   async function copyInvite() {
-    try { await navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?room=" + room); notify("Invite link copied"); }
-    catch { notify("Share room code: " + room); }
+    // Preserve preview/deployment query parameters (for example Floot's ptoken).
+    // Replacing the whole query string with `?room=...` makes preview invites
+    // unusable for anyone who opens the link on another device.
+    const inviteUrl = new URL(window.location.href);
+    inviteUrl.searchParams.set("room", room);
+    inviteUrl.hash = "";
+    try {
+      await navigator.clipboard.writeText(inviteUrl.toString());
+      notify("Invite link copied · friends can join with this link");
+    } catch {
+      // Clipboard APIs may be blocked outside secure contexts. Keep a usable
+      // fallback visible instead of silently failing.
+      notify("Copy blocked · share room code: " + room);
+    }
   }
   async function submitAnswer() {
     if (!selected) { notify("Choose an answer first"); return; }
