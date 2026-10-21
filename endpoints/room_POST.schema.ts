@@ -6,6 +6,7 @@ export const schema = z.object({
   nickname: z.string().trim().min(1).max(18).optional(),
   roomCode: z.string().trim().min(4).max(12).optional(),
   ready: z.boolean().optional(),
+  practice: z.boolean().optional(),
   message: z.string().trim().min(1).max(180).optional(),
   answer: z.string().trim().min(1).max(100).optional(),
 });
