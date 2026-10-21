@@ -156,7 +156,8 @@ export async function handle(request: Request) {
         if (input.action === "start") {
           if (!member.isHost) return response({ error: "Only the host can start the match." }, 403);
           const roster = await db.selectFrom("ctPlayers").select(["sessionId", "isReady"]).where("roomCode", "=", code).execute();
-          if (roster.length < 4) return response({ error: "At least 4 players are needed to start." }, 409);
+          if (roster.length < 4 && !input.practice) return response({ error: "At least 4 players are needed for a full match. Start a practice round instead." }, 409);
+          if (roster.length < 1) return response({ error: "Join the room before starting." }, 409);
           if (roster.some(player => !player.isReady)) return response({ error: "Everyone needs to be ready before the match starts." }, 409);
           await db.updateTable("ctRooms").set({ phase: "game", roundIndex: 0, deadlineAt: new Date(Date.now() + 45_000), updatedAt: new Date() }).where("code", "=", code).execute();
         }
