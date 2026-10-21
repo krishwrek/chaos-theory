@@ -25,6 +25,13 @@ Last updated: 2026-10-19
 - API smoke test succeeded for room creation, three joins, readiness, host start, realtime token generation, four submissions, score updates, and next-round transition.
 - Full browser screenshot inspection and physical multi-device QA have not been completed.
 
+## Invitation and two-client QA (2026-10-22)
+- Fixed invite generation in `pages/_index.tsx` to add/update the `room` query parameter without discarding existing preview access parameters; the change is committed as `0bc4c7e297d61e8debc4a05209606b3c67baa6a2`.
+- Simulated two independent browser sessions against the live project API: host created a room, second session joined, both appeared in the roster, and duplicate join did not create a third player.
+- Verified room membership protection (non-member state request rejected), host-only start (non-host rejected), minimum-player guard (2-player start rejected with a clear 409), four-player start, late-join rejection after match start, realtime token issuance, and duplicate answer rejection.
+- Verified invite URL query composition preserves existing `ptoken` and other query parameters while adding the room code.
+- This is API/session-level verification, not a physical two-device browser test. The temporary preview link is view-only and tokenized; a recipient must be able to access that preview URL. Full real-device invite acceptance and realtime UI behavior still need manual confirmation.
+
 ## Known gaps
 - This is an early playable vertical slice, not a balanced production release.
 - Challenges currently share a generic majority/tie resolution rule. Role and round-objective bonuses exist, but challenge-specific correctness and balance still need work.
